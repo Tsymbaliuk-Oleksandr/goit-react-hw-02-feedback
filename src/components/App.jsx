@@ -22,16 +22,21 @@ export class App extends Component {
   countTotalFeedback = () =>
     Object.values(this.state).reduce((acc, item) => acc + item, 0);
 
-  countPositiveFeedbackPercentage = () =>
-    this.countTotalFeedback() &&
-    Math.round((this.state.good / this.countTotalFeedback()) * 1000) / 10;
-  stateKeys = Object.keys(this.state);
+  countPositiveFeedbackPercentage = () => {
+    if (this.countTotalFeedback() === 0) {
+      return;
+    } else {
+      return (
+        Math.round((this.state.good / this.countTotalFeedback()) * 1000) / 10
+      );
+    }
+  };
 
   render() {
     const { good, neutral, bad } = this.state;
     const totalFeedbacks = this.countTotalFeedback();
     const positivePercentage = this.countPositiveFeedbackPercentage();
-
+    const stateKeys = Object.keys(this.state);
     return (
       <Box display="flex" flexDirection="column" alignItems="center" p={5}>
         <Box
@@ -43,7 +48,7 @@ export class App extends Component {
         >
           <Section title="Please leave feedback">
             <FeedbackOptions
-              options={this.stateKeys}
+              options={stateKeys}
               onLeaveFeedback={this.handleChosenFeedback}
             ></FeedbackOptions>
           </Section>
@@ -59,7 +64,7 @@ export class App extends Component {
                 bad={bad}
                 total={totalFeedbacks}
                 positivePercentage={positivePercentage}
-              ></Statistics>
+              />
             )}
           </Section>
         </Box>
